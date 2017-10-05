@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+{% block main %}
+<div class="l-row">
+  <div class="l-column l-column--wide">
+    <div class="h-heading-group">
+      <h2 class="c-page-heading">{{ book.name }}</h2>
+      <h3 class="c-page-subheading">{{ book.author }}</h3>
+    </div>
+    {% if session.username == book.owner_username %}
+      <a href="{{ url_for('editBook', username=book.owner_username, bookslug=book.slug) }}" class="c-button c-button--primary c-button--rounded">Edit</a>&nbsp;
+      <a href="{{ url_for('deleteBook', username=book.owner_username, bookslug=book.slug) }}" class="c-button c-button--alert c-button--rounded">Delete</a>
+    {% endif %}
+  <p>{{ book.description|safe }}</p>
+  </div>
+  <div class="l-column l-column--narrow">
+  <div class="c-user-card">
+    <span class="c-user-card__top-label">Owner</span>
+    <div class="c-user-card__header">
+      <div>
+        <h2 class="c-user-card__title">{{ book.owner.name }}</h2>
+        <h3 class="c-user-card__subtitle">{{ book.owner.city }}</h3>
+      </div>
+      {% if book.owner.picture %}
+      <img class="c-user-card__image" src="
+      {% if 'http://' in book.owner.picture or 'https://' in book.owner.picture %}
+      {{book.owner.picture}}
+      {% else %}{{ url_for('static', filename='images/'+book.owner.picture) }}
+      {% endif %}"/>
+      {% endif %}
+    </div>
+    <div class="c-user-card__details">
+      <a href="mailto:{{book.owner.email}}" class="c-button c-button--rounded">Email</a>
+      <a href="{{ url_for('showUser', username=book.owner_username) }}" class="c-button c-button--rounded">View profile</a>
+    </div>
+  </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+<div class="c-card h-ajaxlink" data-link="{{ url_for('showBook', username=book.owner_username, bookslug=book.slug) }}">
+  <div class="c-card__left">
+    <h2 class="c-card__title">{{ book.name }}</h2>
+    <p class="c-card__subtitle">{{ book.author }}</p>
+  </div>
+  {% if session.username == book.owner_username %}
+  <div class="c-card__right">
+    <a href="{{ url_for('editBook', username=book.owner_username, bookslug=book.slug) }}" class="c-button c-button--primary c-button--rounded">Edit</a>&nbsp;
+    <a href="{{ url_for('deleteBook', username=book.owner_username, bookslug=book.slug) }}" class="c-button c-button--alert c-button--rounded">Delete</a>
+  </div>
+  {% endif %}
+</div>

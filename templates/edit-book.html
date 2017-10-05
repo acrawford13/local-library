@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+{% block main %}
+<form class="c-form" method="POST">
+  <input type="hidden" value="{{ csrf_token() }}" name="csrf_token"/>
+  <label class="c-form__label" for="name">Name</label>
+  <input class="c-form__field" name="name" id="name" type="text" value="{{ book.name }}" required>
+  <label class="c-form__label" for="author">Author</label>
+  <input class="c-form__field" name="author" id="author" type="text" value="{{ book.author }}" required>
+  <label class="c-form__label" for="fake-textarea">Description</label>
+  <div class="c-form__fake-textarea c-form__field" tabindex="0" id="fake-textarea" contenteditable="true" onblur="updateTextArea()">{% if book.description %}{{ book.description|safe }}{% endif %}</div>
+  <input type="hidden" id="description" name="description" value="{{ book.description }}">
+  <div class="c-form__row">
+    <a href="{{ url_for('showUser', username=session.username) }}" class="c-button c-button--rounded c-button--alert">Cancel</a>
+    <input type="submit" value="Confirm" class="c-button c-button--rounded c-button--primary">
+  </div>
+</form>
+{% endblock %}
+{% block footer_script %}
+<script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+<script>
+  function updateTextArea(){
+    var content = $('#fake-textarea').html()
+    $('#description').val(content);
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'main.html' %}
+{% block main %}
+    <div class="l-row">
+      <div class="l-column l-column--wide">
+        <div id="searching">
+          <h2 class="c-section-heading">Books near you:</h2>
+          <span class="c-caption">Books within </span><form id="change-radius" class="c-form--inline" method="GET"><input id="change-radius__value" value="{{search_radius}}" class="c-form__field c-form__field--hide-arrows" type="number" required></form><span>km of your location (<a href="{{ url_for('editProfile',username=session.username) }}">change home location</a>)</span></div>
+        <div id="results">
+          {% if books %}
+            {% for book in books %}
+              {% include '_book.html' %}
+            {% endfor %}
+          {% else %}
+            No results within {{search_radius}}km of your location
+          {% endif %}
+        </div>
+      </div>
+      <div class="l-column l-column--narrow">
+        <div id="search">
+          <h2 class="c-section-heading">Search in another location</h2>
+          <form class="c-form" id="search-box">
+            <label class="c-form__label" for="search-input">Search</label>
+            <input class="c-form__field" id="search-input" type="text" name="search-input" placeholder="Enter location" required/>
+            <label class="c-form__label" for="search-input">Search Radius (km)</label>
+            <input class="c-form__field" type="number" min="0" value="10" id="search-radius" required/>
+            <input class="c-form__submit-button c-button--rounded c-button--primary c-button" type="submit" value="Search" />
+          </form>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+{% block footer_script %}
+  <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  <script>
+
+    function initMap() {
+      var autocomplete = new google.maps.places.Autocomplete(document.getElementById('search-input'), {'types':['geocode']});
+    }
+
+    function addLinks(){
+      $('.h-ajaxlink').click(function(){
+        window.location.href = $(this).data('link');
+      });
+    }
+
+    addLinks();
+
+    $(document).on('submit','#change-radius',function(e){
+      e.preventDefault();
+      var savedHeader = $('#searching').html();
+      var radius = $('#change-radius__value').val();
+      savedHeader = savedHeader.replace(/value="\d*?"/g,'value="'+radius+'"');
+      $.ajax({
+        'url': 'http://localhost:5000/search/',
+        'data': {
+          'radius': radius
+        },
+        'beforeSend': function(){
+          $('#searching').html('<h2 class="c-section-heading">Searching&hellip;</h2><p>Searching for books within '+radius+'km of your location</p>');
+          $('#results').html('<div class="h-align--center"><img src="{{url_for('static', filename='loading.gif')}}" /></div>');
+        },
+        'success': function(response){
+          $('#searching').html(savedHeader);
+          $('#results').html(''+response);
+          $('#change-radius__value').blur();
+
+          addLinks();
+        }
+      })
+    });
+
+    $(document).on('submit','#search-box',function(e){
+      e.preventDefault();
+      $.ajax({
+        'url': 'http://localhost:5000/search/',
+        'data': {
+          'search': $('#search-input').val(),
+          'radius': $('#search-radius').val(),
+        },
+        'beforeSend': function(){
+          $('#searching').html('<h2 class="c-section-heading">Searching&hellip;</h2><p>Searching for books within '+$('#search-radius').val()+'km of '+$('#search-input').val()+'</p>');
+          $('#results').html('<div class="h-align--center"><img src="{{url_for('static', filename='loading.gif')}}" /></div>');
+        },
+        'success': function(response){
+          $('#searching').html('<h2 class="c-section-heading">Results</h2>');
+          $('#results').html(''+response);
+          $('#search-input').blur();
+          $('#search-radius').blur();
+
+          addLinks();
+        }
+      });
+    });
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=initMap">
+  </script>
+{% endblock %}

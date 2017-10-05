@@ -1,0 +1,91 @@
+{% extends 'main.html' %}
+{% block main %}
+  <h1 class="c-page-heading">Edit your profile</h1>
+  <form class="c-form" id="edit-profile" method="POST" enctype="multipart/form-data">
+    <input type="hidden" value="{{ csrf_token() }}" name="csrf_token"/>
+    <input type="hidden" name="location_lat" value="{{ user.location_lat }}" id="location_lat"/>
+    <input type="hidden" name="location_lng" value="{{ user.location_lng }}" id="location_lng"/>
+    <label class="c-form__label" for="name">What's your name?</label>
+    <input class="c-form__field" type="text" name="name" value="{{ user.name }}" required />
+    <label class="c-form__label" for="profilepic">Upload a profile picture</label>
+    <input class="c-form__field" type="file" name="profilepic" />
+    <label class="c-form__label" for="city">What location should appear on your profile?</label>
+    <input class="c-form__field" type="text" name="city"  {% if user.city %}value="{{ user.city }}"{% else %}placeholder="Circular Quay, Sydney"{% endif %} />
+    <label class="c-form__label" for="country">Which country?</label>
+    <input class="c-form__field" type="text" name="country" {% if user.country %}value="{{ user.country }}"{% else %}placeholder="Australia"{% endif %} />
+    <label class="c-form__label" for="name">Pinpoint your exact location (this won't be publicly visible):</label>
+    <input id="searchbox" class="controls" type="text" placeholder="Search for a location">
+    <div class="c-map">
+      <div class="c-map__inner" id="map"></div>
+    </div>
+    <div class="c-form__row">
+      <a href="{{ url_for('showUser', username=session.username) }}" class="c-button c-button--rounded c-button--alert">Cancel</a>
+      <input type="submit" value="Confirm" class="c-button c-button--rounded c-button--primary">
+    </div>
+  </form>
+    {% endblock %}
+    {% block footer_script %}
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script>
+      function updateLocation(place){
+        $('#location_lat').val(place.lat());
+        $('#location_lng').val(place.lng());
+      };
+      function initMap() {
+        {% if user.location_lat and user.location_lng %}
+          var me = {lat: {{ user.location_lat }}, lng: {{ user.location_lng }}};
+        {% else %}
+          var me = {lat: -33.856200, lng: 151.215370};
+        {% endif %}
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: me
+        });
+        var marker = new google.maps.Marker({
+          position: me,
+          map: map,
+          draggable: true
+        });
+
+        var searchBox = new google.maps.places.SearchBox(document.getElementById('searchbox'));
+        var autocomplete = new google.maps.places.Autocomplete(document.getElementById('searchbox'), {'types':['geocode']});
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('searchbox'));
+
+        autocomplete.addListener('place_changed', function() {
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+          updateLocation(place.geometry.location)
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+        })
+
+        var input = document.getElementById('searchbox');
+        google.maps.event.addDomListener(input,'keydown', function(e) {
+            if (e.keyCode == 13 && $('.pac-container:visible').length) {
+                e.preventDefault();
+            }
+        });
+
+        $(document).on('submit', $('#edit-profile'), function(e){
+          updateLocation(marker.position);
+        });
+      }
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=initMap">
+    </script>
+    {% endblock %}

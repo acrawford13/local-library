@@ -1,0 +1,5 @@
+{% if session.location_lat %}
+  {% include 'home-logged-in.html' %}
+{% else %}
+  {% include 'home-logged-out.html' %}
+{% endif %}

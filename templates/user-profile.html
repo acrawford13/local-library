@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+{% block main %}
+<div class="c-user-header">
+  {% if user.picture %}
+  <div class="c-user-header__image" style="background-image:url('{% if 'http://' in user.picture or 'https://' in user.picture %}{{user.picture}}{% else %}{{ url_for('static', filename='images/'+user.picture) }}{% endif %}')"></div>
+  {% endif %}
+  <h2 class="c-user-header__title">{{ user.name }}</h2>
+  {% if user.city %}
+  <h3 class="c-user-header__subtitle">{{ user.city }}</h3>
+  {% else %}
+  <a class="" href="{{ url_for('editProfile', username=user.username) }}">Add your city</a><br/>
+  {% endif %}
+  {% if user.city %}
+  <span>{{ user.country }}</span><br/>
+  {% else %}
+  <a class="" href="{{ url_for('editProfile', username=user.username) }}">Add your country</a><br/>
+  {% endif %}
+{% if session.username == user.username %}
+  <a class="c-button c-button--rounded c-button--primary" href="{{ url_for('editProfile', username=user.username) }}">Edit my profile</a>
+  <a href="{{ url_for('newBook', username=user.username) }}" class="c-button c-button--rounded c-button--alert">Add a book</a>
+{% else %}
+  <a href="mailto:{{user.email}}" class="c-button c-button--rounded">Email me</a>
+{% endif %}
+</div>
+{% if books %}
+  {% for book in books %}
+    {% include '_book-simple.html' %}
+  {% endfor %}
+{% endif %}
+{% endblock %}
+{% block footer_script %}
+  <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  <script>
+    $('.h-ajaxlink').click(function(){
+      window.location.href = $(this).data('link');
+    });
+  </script>
+{% endblock %}

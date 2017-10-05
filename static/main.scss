@@ -1,0 +1,481 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font: {
+    family: Roboto, Arial, sans-serif;
+  };
+  background-color: white;
+}
+
+input {
+  font: {
+    family: Roboto, Arial, sans-serif;
+  };
+}
+
+$colors : (
+  amaranth: #E91E63,
+  mercury: #f5f5f5,
+  robins-egg: #00BCD4,
+  pomegranate: #F44336,
+  orange-peel: #ff9800,
+  denim: #1565C0,
+  light-grey: #fafafa,
+  medium-grey: #ddd,
+);
+
+$primary-color: map-get($colors, denim);
+
+$large-text: 1.25rem;
+$global-radius: 0.5rem;
+$top-bar-height: 3rem;
+
+@mixin container {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.l-row {
+  display: flex;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.l-column {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.l-column--narrow {
+  width: 30%;
+}
+
+.l-column--wide {
+  width: 70%;
+}
+
+a {
+  color: $primary-color;
+}
+
+main {
+  @include container;
+  padding-top: $top-bar-height + 1rem;
+  margin: 0 auto;
+}
+
+.c-user-card {
+  $image-size: 4rem;
+  border-radius: $global-radius;
+  // border-top-right-radius: $image-size/1.5;
+  border: 0.5px solid #ddd;
+  background-color: #fafafa;
+  padding: 0.5rem;
+
+  &__top-label {
+    font-size:0.7rem;
+    color: #888;
+    display: block;
+    border-bottom: 0.5px solid #ccc;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+    text-transform: uppercase;
+  }
+
+  &__header {
+    margin-top: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__details {
+
+  }
+
+  &__subtitle {
+    margin: 0;
+  }
+
+  &__title {
+    margin-top: -0.25rem;
+    margin-bottom: 0;
+    color: $primary-color;
+  }
+
+  &__image {
+    height: $image-size;
+    width: $image-size;
+    border-radius: $image-size/2;
+    margin-left: 1rem;
+    border:3px solid #eee;
+  }
+}
+
+.c-message-list {
+  background-color: map-get($colors, mercury);
+  border: 0.5px solid darken(map-get($colors, mercury),2);
+  border-radius: $global-radius;
+  padding: 0.5rem;
+  list-style-type: none;
+
+  &__item {
+    text-align: center;
+  }
+}
+
+.c-top-bar {
+  background-color: $primary-color;
+  width: 100%;
+  position: fixed;
+  height: $top-bar-height;
+
+  &__wrapper {
+    @include container;
+    display: flex;
+    height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    margin: 0;
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+  }
+}
+
+.c-user-header {
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+  text-align: center;
+
+  &__title {
+    color: $primary-color;
+    font-size: 2rem;
+    // margin: 0;
+  }
+
+  &__title, &__subtitle {
+    margin: 0;
+  }
+
+  &__image {
+    height: 5rem;
+    width: 5rem;
+    min-height: 5rem;
+    min-width: 5rem;
+    background-size: cover;
+    display: inline-block;
+    border-radius: 2.5rem;
+    border:3px solid #eee;
+  }
+}
+
+.c-map {
+  height: 300px;
+
+  &__inner {
+    height: 100%;
+  }
+}
+
+#searchbox {
+  margin-top:0.6rem;
+  border: none;
+  border-bottom: 2px solid $primary-color;
+  background-color: rgba(white, 0.9);
+  padding: 0.5rem;
+  width: 50%;
+}
+
+.c-button {
+  padding: 0.5rem;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.2s;
+  border: none;
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-align: center;
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: darken($primary-color, 5);
+
+  &:hover {
+    background-color: darken($primary-color, 10);
+  }
+}
+
+.c-button--primary {
+  background-color: darken($primary-color, 5);
+
+  &:hover {
+    background-color: darken($primary-color, 10);
+  }
+}
+
+.c-button--alert {
+  background-color: map-get($colors, pomegranate);
+
+  &:hover {
+    background-color: darken(map-get($colors, pomegranate), 10);
+  }
+}
+
+.c-button--rounded {
+  border-radius: $global-radius;
+}
+
+.c-card {
+  border: {
+    radius: $global-radius/2;
+    width: 0.5px;
+    color: #ddd;
+    style: solid;
+  };
+  display: flex;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: #fafafa;
+  justify-content: space-between;
+  align-items: center;
+
+  &__title, &__subtitle, &__details {
+    margin: 0;
+  }
+
+  &__right {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+  }
+
+  &__image {
+    height: 3rem;
+    width: 3rem;
+    min-height: 3rem;
+    min-width: 3rem;
+    border-radius: 2rem;
+    margin-left: 0.5rem;
+    display: inline-block;
+    background-size: cover;
+  }
+}
+
+.c-form {
+  display: flex;
+  flex-direction: column;
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    align-self: stretch;
+
+    > * {
+      flex: 1;
+      margin-right: 0.5rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  &__field {
+    font: {
+      size: $large-text;
+    };
+    border: none;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid $primary-color;
+    margin-bottom: 1rem;
+
+    &--hide-arrows {
+      &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+      -moz-appearance: textfield;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__fake-textarea {
+    font-size: 1.1rem;
+  }
+
+  &__label {
+    font-size:0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  &--inline {
+    display: inline;
+
+    .c-form__field {
+      width: 4rem;
+      text-align: center;
+    }
+  }
+}
+
+.c-search-box {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+  align-content: stretch;
+  padding-bottom: 1.5rem;
+  // border-bottom: 3px solid $primary-color;
+
+  .c-search-box__field-label {
+    font-size:0.75rem;
+    // margin-bottom: 0.1rem;
+    // padding-left: 0.2rem;
+    // padding-left: 0.25rem;
+    color: #222;
+  }
+
+  .c-search-box__submit-button {
+    height: 2rem;
+    margin-bottom: 0;
+  }
+
+  .c-search-box__main-group {
+    flex-grow: 1;
+  }
+
+  .c-search-box__field-group {
+    display: flex;
+    flex-direction: column;
+
+    // &:first-child input {
+    //   border-top-left-radius: 0.5rem;
+    //   border-bottom-left-radius: 0.5rem;
+    // }
+    // &:last-child input {
+    //   border-top-right-radius: 0.5rem;
+    //   border-bottom-right-radius: 0.5rem;
+    // }
+
+    .c-search-box__field {
+      font: {
+        size: $large-text;
+      };
+      // background-color: #fafafa;
+      // border: {
+      //   width: 0.5px;
+      //   style: solid;
+      //   color: #ddd;
+      // };
+      // border-right: none;
+      border: none;
+      // padding: 0.25rem 0.5rem;
+      // padding: 0.25rem;
+      padding-bottom: 0.25rem;
+      padding-top: 0.25rem;
+      border-bottom: 2px solid $primary-color;
+      margin-right: 0.5rem;
+
+      &:focus {
+        outline: none;
+      }
+
+      &[type='number'] {
+        width: 8rem;
+      }
+    }
+  }
+}
+
+.c-panel {
+  background-color: map-get($colors, light-grey);
+  padding: 1rem;
+  border-radius: $global-radius;
+}
+
+.c-page-heading {
+  color: darken($primary-color,15)
+}
+
+.c-section-heading {
+  margin-bottom: 0.75rem;
+  color: darken($primary-color,15)
+}
+
+.c-footer {
+  @include container;
+  font-size: 0.9rem;
+  color: #666;
+  border-top: 0.5px solid grey;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-top: 1rem;
+  display: flex;
+
+  &__logo {
+    margin-right: 0.75rem;
+  }
+}
+
+@media screen and (min-width: 720px) and (max-width: 800px){
+  .c-user-card {
+    &__header {
+    display: flex;
+    flex-direction: column-reverse;
+    }
+
+    &__image {
+      margin: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 720px){
+  .l-row {
+    display: block;
+  }
+
+  .l-column--wide, .l-column--narrow {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 966px){
+  .c-top-bar__wrapper, main, .c-footer {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+.h-ajaxlink {
+  cursor: pointer;
+}
+
+.h-align--center {
+  text-align: center;
+}
+
+.h-text--small {
+  font-size: 0.8rem;
+}
+
+.h-heading-group {
+  > h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

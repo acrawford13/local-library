@@ -1,0 +1,80 @@
+{% extends 'main.html' %}
+{% block head %}
+<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+{% endblock %}
+{% block main %}
+  <div class="h-align--center" id="page-content">
+    <h2>Log in</h2>
+    <div id="signInButton">
+      <span class="g-signin"
+        data-scope="openid email"
+        data-clientid="381161863135-jhr8hqod2nall75c25d5b749v7go3rdb.apps.googleusercontent.com"
+        data-redirecturi="postmessage"
+        data-accesstype="offline"
+        data-cookiepolicy="single_host_origin"
+        data-callback="signInCallback"
+        data-approvalprompt="force">
+      </span>
+    </div>
+    <div class="fb-login-button" onlogin="sendTokenToServer()" data-scope="public_profile, email" data-max-rows="1" data-size="large" data-button-type="login_with"></div><br/><br/>
+  </div>
+{% endblock %}
+{% block footer_script %}
+  <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  <script>
+    function signInCallback(authResult) {
+      if(authResult['code']){
+        $('#page-content').html('Logging you in...');
+        $.ajax({
+          type: 'POST',
+          url: '/gconnect?csrf_token={{ csrf_token() }}',
+          processData: false,
+          contentType: 'application/octet-stream; charset=utf-8',
+          data: authResult['code'],
+          success: function(response){
+            window.location.href = '/';
+            $('#page-content').html('Login successful! Redirecting...');
+          },
+          error: function(error){
+            console.log(error);
+          }
+        })
+      }
+    };
+  </script>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId            : '1988714488026385',
+        autoLogAppEvents : true,
+        xfbml            : true,
+        version          : 'v2.10'
+      });
+      FB.AppEvents.logPageView();
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+
+    function sendTokenToServer(){
+      var access_token = FB.getAuthResponse()['accessToken'];
+      $('#page-content').html('Logging you in...');
+      $.ajax({
+        type: 'POST',
+        url: '/fbconnect?csrf_token={{ csrf_token() }}',
+        data: access_token,
+        processData: false,
+        contentType: 'application/octet-stream; charset=utf-8',
+        success: function(response){
+          $('#page-content').html('Login successful! Redirecting...');
+          window.location.href = response
+        }
+      })
+    }
+  </script>
+{% endblock %}

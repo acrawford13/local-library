@@ -1,0 +1,12 @@
+<div class="c-card h-ajaxlink" data-link="{{ url_for('showBook',username=book.owner.username, bookslug=book.slug) }}">
+  <div class="c-card__left">
+    <h2 class="c-card__title">{{ book.name }}</h2>
+    <p class="c-card__subtitle">{{ book.author }}</p>
+  </div>
+  <div class="c-card__right">
+    <p class="c-card__details">
+      {{ book.owner.name }}<br/>
+      <strong>{{ book.owner.city }}</strong>{% if location %}<br/><span class="h-text--small">{% if book.owner.distance(location,0)>0 %}{{ book.owner.distance(location,0) }}km away{% else %}<1 km away{% endif %}</span>{% endif %}</p>
+    <div class="c-card__image" style="background-image: url('{% if not book.owner.picture %}{{ url_for('static', filename='images/no-profilepic.png') }}{% elif 'http://' in book.owner.picture or 'https://' in book.owner.picture %}{{book.owner.picture}}{% else %}{{ url_for('static', filename='images/'+book.owner.picture) }}{% endif %}')"></div>
+  </div>
+</div>

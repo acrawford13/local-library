@@ -1,0 +1,67 @@
+{% extends 'main.html' %}
+{% block main %}
+    <div id="search">
+      <h2 class="c-section-heading">Search for books near you</h2>
+      <form class="c-search-box" id="search-box">
+        <div class="c-search-box__field-group c-search-box__main-group">
+          <label class="c-search-box__field-label" for="search-input">Search</label>
+          <input class="c-search-box__field" id="search-input" type="text" name="search-input" placeholder="Enter your location" />
+        </div>
+        <div class="c-search-box__field-group">
+          <label class="c-search-box__field-label" for="search-input">Search Radius (km)</label>
+          <input class="c-search-box__field" type="number" min="0" value="10" id="search-radius" />
+        </div>
+        <input class="c-search-box__submit-button c-button--rounded c-button--primary c-button" type="submit" value="Search" />
+      </form>
+    </div>
+    <div id="searching"></div>
+    <div id="results">
+      <h2 class="c-section-heading">Recently added books:</h2>
+    {% for book in books %}
+      {% include '_book.html' %}
+    {% endfor %}
+    </div>
+{% endblock %}
+{% block footer_script %}
+  <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  <script>
+
+    function initMap() {
+      var autocomplete = new google.maps.places.Autocomplete(document.getElementById('search-input'), {'types':['geocode']});
+    }
+
+    function addLinks(){
+      $('.h-ajaxlink').click(function(){
+        window.location.href = $(this).data('link');
+      });
+    }
+
+    addLinks();
+
+    $(document).on('submit','#search-box',function(e){
+      e.preventDefault();
+      $.ajax({
+        'url': 'http://localhost:5000/search/',
+        'data': {
+          'search': $('#search-input').val(),
+          'radius': $('#search-radius').val(),
+        },
+        'beforeSend': function(){
+          $('#searching').html('<h2 class="c-section-heading">Searching&hellip;</h2><p>Searching for books within '+$('#search-radius').val()+'km of '+$('#search-input').val()+'</p>');
+          $('#results').html('<div class="h-align--center"><img src="{{url_for('static', filename='loading.gif')}}" /></div>');
+        },
+        'success': function(response){
+          $('#searching').html('<h2 class="c-section-heading">Results</h2>');
+          $('#results').html(''+response);
+          $('#search-input').blur();
+          $('#search-radius').blur();
+
+          addLinks();
+        }
+      });
+    });
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=initMap">
+  </script>
+{% endblock %}
