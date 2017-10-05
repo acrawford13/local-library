@@ -1,5 +1,23 @@
 # Item Catalog Project
 
+## Getting Started
+- Download the repository
+- Create JSON files containing Facebook/Google credentials and edit references in `views.py` lines 42-49 if necessary
+- From the main folder, run `python populatedb.py` to populate the database with sample data
+- Run `python views.py` to start the server
+
+## Dependencies
+- Flask
+- SQL Alchemy
+- [Python Client for Google Maps Services](https://github.com/googlemaps/google-maps-services-python)  
+`$ pip install -U googlemaps`
+- OAuth2Client
+
+## API Keys/Credentials
+- [Google Maps API key](https://github.com/googlemaps/google-maps-services-python#api-keys)
+- Facebook App ID/App Secret
+- Google OAuth 2.0 Web Client ID/Client Secret
+
 ## API Endpoints
 **GET** api/search/  
 Accepts search parameters and returns books within the search area, including distance (in km) from the search point
@@ -76,21 +94,3 @@ Returns a JSON object with the book and its owner's details
         "picture": "profilepic.jpg"        
       }
     }
-
-
-## Dependencies
-- Flask
-- SQL Alchemy
-- [Python Client for Google Maps Services](https://github.com/googlemaps/google-maps-services-python)
-- OAuth2Client
-
-## API Keys/Credentials
-- [Google Maps API key](https://github.com/googlemaps/google-maps-services-python#api-keys)
-- Facebook App ID/App Secret
-- Google OAuth 2.0 Web Client ID/Client Secret
-
-## Getting Started
-- Download the repository
-- Create JSON files containing Facebook/Google credentials and edit references in `views.py` lines 42-49 if necessary
-- From the main folder, run `python populatedb.py` to populate the database with sample data
-- Run `python views.py` to start the server

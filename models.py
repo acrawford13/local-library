@@ -86,14 +86,5 @@ class Book(Base):
             "distance":self.owner.distance(location),
         }
 
-
-
-class BookGenre(Base):
-    __tablename__ = 'genre'
-    id = Column(Integer, primary_key=True)
-    genre = Column(String)
-    book_id = Column(String, ForeignKey('book.id'))
-    book = relationship(Book)
-
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.create_all(engine)

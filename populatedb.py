@@ -2,7 +2,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base, User, Book, BookGenre
+from models import Base, User, Book
 from datetime import datetime, timedelta
 from random import randint
 
@@ -23,7 +23,6 @@ if __name__ == '__main__':
     session.commit()
 
     session.query(Book).delete()
-    session.query(BookGenre).delete()
     session.commit()
 
     franny = User(name='Franny Glass', email='franny@glassfamily.com', picture='franny.jpg', username='franny-glass',location_lat=-33.811901,location_lng=151.003446,city=u'Paramatta, NSW',country='Australia')
