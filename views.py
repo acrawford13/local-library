@@ -39,8 +39,14 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-google_api_key = json.load(open('google_api_key.json'))['key']
-gmaps = googlemaps.Client(key=google_api_key)
+GOOGLE_API_KEY = json.load(open('google_api_key.json'))['key']
+gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
+
+FACEBOOK_APP_ID = (json.loads(open('fb_client_secret.json', 'r').read())
+                  ['web']['app_id'])
+FACEBOOK_APP_SECRET = (json.loads(open('fb_client_secret.json', 'r').read())
+                      ['web']['app_secret'])
+GOOGLE_CLIENT_SECRET_FILE = 'google_client_secret.json'
 
 
 # csrf protection snippet from http://flask.pocoo.org/snippets/3/
@@ -128,11 +134,11 @@ def home():
                         .order_by(User.distance(location), Book.name).all())
         return render_template('home-logged-in.html',
                                books=books, search_radius=search_radius,
-                               location=location, api_key=google_api_key)
+                               location=location, api_key=GOOGLE_API_KEY)
     else:
         books = session.query(Book).order_by('date_added').limit(5)
         return render_template('home-logged-out.html',
-                               books=books, api_key=google_api_key)
+                               books=books, api_key=GOOGLE_API_KEY)
 
 
 @app.route('/login/')
@@ -145,12 +151,9 @@ def showLogin():
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
     access_token = request.data
-    app_id = (json.loads(open('fb_client_secret.json', 'r').read())
-              ['web']['app_id'])
-    app_secret = (json.loads(open('fb_client_secret.json', 'r').read())
-                  ['web']['app_secret'])
+
     url = ('https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s'
-           % (app_id, app_secret, access_token))
+           % (FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, access_token))
     h = httplib2.Http()
     response = h.request(url, 'GET')[1]
     login_session['app_access_token'] = json.loads(response)['access_token']
@@ -160,6 +163,13 @@ def fbconnect():
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     user_data = json.loads(result)
+
+    if 'email' not in user_data:
+        response = make_response(
+                   json.dumps("Sorry, your email address is required for login"),
+                   400)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
     login_session['facebook_id'] = user_data['id']
     login_session['provider'] = "facebook"
@@ -181,11 +191,11 @@ def fbconnect():
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     code = request.data
-    client_id = (json.loads(open('google_client_secret.json', 'r').read())
+    client_id = (json.loads(open(GOOGLE_CLIENT_SECRET_FILE, 'r').read())
                  ['web']['client_id'])
 
     try:
-        oauth_flow = flow_from_clientsecrets('google_client_secret.json',
+        oauth_flow = flow_from_clientsecrets(GOOGLE_CLIENT_SECRET_FILE,
                                              scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
@@ -204,6 +214,7 @@ def gconnect():
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
+        return response
 
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
@@ -415,7 +426,7 @@ def editProfile(username):
     # get request: render form to edit user profile
     if request.method == 'GET':
         return render_template('edit-profile.html',
-                               user=user, api_key=google_api_key)
+                               user=user, api_key=GOOGLE_API_KEY)
 
     # post request: update user info in database
     if request.method == 'POST':

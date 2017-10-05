@@ -72,7 +72,10 @@
         contentType: 'application/octet-stream; charset=utf-8',
         success: function(response){
           $('#page-content').html('Login successful! Redirecting...');
-          window.location.href = response
+          window.location.href = response;
+        },
+        error: function(response){
+          $('#page-content').html(response.responseJSON);
         }
       })
     }
