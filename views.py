@@ -378,7 +378,7 @@ def showJson():
              .filter(User.distance(location) <= search_radius_deg)
              .order_by(User.distance(location), Book.name).all())
 
-    return jsonify(books=[book.serialize_with_distance(location=location)
+    return jsonify(books=[book.serialize_detailed(location=location)
                           for book in books])
 
 
@@ -394,7 +394,7 @@ def userJSON(username):
                    city=user.city,
                    country=user.country,
                    picture=user.picture,
-                   books=[book.serialize_book for book in books])
+                   books=[book.serialize_simple for book in books])
 
 
 @app.route('/api/book/<string:username>/<string:bookslug>')
@@ -405,7 +405,7 @@ def bookJSON(username, bookslug):
     if not book:
         return "No book by this name"
 
-    return jsonify(book.serialize_book_owner)
+    return jsonify(book.serialize_detailed())
 
 
 @app.route('/<string:username>/editprofile/', methods=['GET', 'POST'])

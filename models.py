@@ -43,24 +43,7 @@ class Book(Base):
     UniqueConstraint(owner_username,slug,name='_username_slug_uc')
 
     @property
-    def serialize_book_owner(self):
-        return {
-            "name":self.name,
-            "author":self.author,
-            "date_added":self.date_added,
-            "slug":self.slug,
-            "description":self.description,
-            "owner":{
-                "name":self.owner.name,
-                "username":self.owner_username,
-                "country":self.owner.country,
-                "city":self.owner.city,
-                "picture":self.owner.picture,
-            }
-        }
-
-    @property
-    def serialize_book(self):
+    def serialize_simple(self):
         return {
             "name":self.name,
             "author":self.author,
@@ -69,8 +52,8 @@ class Book(Base):
             "description":self.description,
         }
 
-    def serialize_with_distance(self, location):
-        return {
+    def serialize_detailed(self, location=None):
+        book = {
             "name":self.name,
             "author":self.author,
             "date_added":self.date_added,
@@ -83,8 +66,10 @@ class Book(Base):
                 "picture":self.owner.picture,
             },
             "description":self.description,
-            "distance":self.owner.distance(location),
         }
+        if location:
+            book['location'] = self.owner.distance(location)
+        return book
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.create_all(engine)
