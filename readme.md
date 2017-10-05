@@ -59,6 +59,8 @@ You must provide `lat` and `lng` parameters, or the `search` parameter:
 **GET** api/user/[username]  
 Returns a JSON object with the user's details and owned books:
 
+#### Sample response
+
     {
       "username": "andrea-crawford",
       "name": "Andrea Crawford",
@@ -79,6 +81,8 @@ Returns a JSON object with the user's details and owned books:
 
 **GET** api/book/[username]/[bookslug]  
 Returns a JSON object with the book and its owner's details
+
+#### Sample response
 
     {
       "author": "Haruki Murakami",
