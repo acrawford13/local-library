@@ -1,7 +1,7 @@
 # Item Catalog Project
 
 ## API Endpoints
-**GET** api/search?  
+**GET** api/search/  
 Accepts search parameters and returns books within the search area, including distance (in km) from the search point
 
 | parameter |  |
@@ -59,7 +59,7 @@ Returns a JSON object with the user's details and owned books:
       ]
     }
 
-**GET** api/book/[username]/[bookslug]
+**GET** api/book/[username]/[bookslug]  
 Returns a JSON object with the book and its owner's details
 
     {
