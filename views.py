@@ -43,9 +43,9 @@ GOOGLE_API_KEY = json.load(open('google_api_key.json'))['key']
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
 
 FACEBOOK_APP_ID = (json.loads(open('fb_client_secret.json', 'r').read())
-                  ['web']['app_id'])
+                   ['web']['app_id'])
 FACEBOOK_APP_SECRET = (json.loads(open('fb_client_secret.json', 'r').read())
-                      ['web']['app_secret'])
+                       ['web']['app_secret'])
 GOOGLE_CLIENT_SECRET_FILE = 'google_client_secret.json'
 
 
@@ -166,7 +166,7 @@ def fbconnect():
 
     if 'email' not in user_data:
         response = make_response(
-                   json.dumps("Sorry, your email address is required for login"),
+                   json.dumps("Sorry, email address is required for login"),
                    400)
         response.headers['Content-Type'] = 'application/json'
         return response
