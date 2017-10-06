@@ -1,5 +1,7 @@
 # Item Catalog Project
 
+This is a catalog of books, which uses Google Maps API to allow searching for books in the local area.
+
 ## Getting Started
 - Download the repository
 - Create a new project in Google APIs and ensure the following APIs are enabled:
