@@ -1,4 +1,4 @@
-*.json
+*--hide*
 *.db
 *.pyc
 /static/.sass-cache

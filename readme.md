@@ -2,7 +2,15 @@
 
 ## Getting Started
 - Download the repository
-- Create JSON files containing Facebook/Google credentials and edit references in `views.py` lines 42-49 if necessary
+- Create a new project in Google APIs and ensure the following APIs are enabled:
+  - Google Maps Geocoding API
+  - Google Maps JavaScript API
+  - Google Places API Web Service
+- Update the following files with your own api keys/client secrets:
+  - `fb_client_secret.json`
+  - `google_client_secret.json`
+  - `google_api_key.json`
+- Update Google client id and Facebook app id in `login.html`, lines 11 & 48
 - From the main folder, run `python populatedb.py` to populate the database with sample data
 - Run `python views.py` to start the server
 
@@ -10,11 +18,11 @@
 - Flask
 - SQL Alchemy
 - [Python Client for Google Maps Services](https://github.com/googlemaps/google-maps-services-python)  
-`$ pip install -U googlemaps`
+(`$ pip install -U googlemaps`)
 - OAuth2Client
 
 ## API Keys/Credentials
-- [Google Maps API key](https://github.com/googlemaps/google-maps-services-python#api-keys)
+- [Google Maps API key](https://github.com/googlemaps/google-maps-services-python#api-keys)  
 - Facebook App ID/App Secret
 - Google OAuth 2.0 Web Client ID/Client Secret
 
