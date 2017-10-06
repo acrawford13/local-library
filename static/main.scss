@@ -71,7 +71,6 @@ main {
 .c-user-card {
   $image-size: 4rem;
   border-radius: $global-radius;
-  // border-top-right-radius: $image-size/1.5;
   border: 0.5px solid #ddd;
   background-color: #fafafa;
   padding: 0.5rem;
@@ -92,10 +91,6 @@ main {
     justify-content: space-between;
   }
 
-  &__details {
-
-  }
-
   &__subtitle {
     margin: 0;
   }
@@ -109,9 +104,13 @@ main {
   &__image {
     height: $image-size;
     width: $image-size;
+    min-height: $image-size;
+    min-width: $image-size;
     border-radius: $image-size/2;
     margin-left: 1rem;
     border:3px solid #eee;
+    background-size: cover;
+    display: inline-block;
   }
 }
 
@@ -159,7 +158,6 @@ main {
   &__title {
     color: $primary-color;
     font-size: 2rem;
-    // margin: 0;
   }
 
   &__title, &__subtitle {

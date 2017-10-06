@@ -60,9 +60,13 @@ main {
   .c-user-card__image {
     height: 4rem;
     width: 4rem;
+    min-height: 4rem;
+    min-width: 4rem;
     border-radius: 2rem;
     margin-left: 1rem;
-    border: 3px solid #eee; }
+    border: 3px solid #eee;
+    background-size: cover;
+    display: inline-block; }
 
 .c-message-list {
   background-color: #f5f5f5;

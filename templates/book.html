@@ -21,11 +21,7 @@
         <h3 class="c-user-card__subtitle">{{ book.owner.city }}</h3>
       </div>
       {% if book.owner.picture %}
-      <img class="c-user-card__image" src="
-      {% if 'http://' in book.owner.picture or 'https://' in book.owner.picture %}
-      {{book.owner.picture}}
-      {% else %}{{ url_for('static', filename='images/'+book.owner.picture) }}
-      {% endif %}"/>
+      <div class="c-user-card__image" style="background-image:url('{% if 'http://' in book.owner.picture or 'https://' in book.owner.picture %}{{book.owner.picture}}{% else %}{{ url_for('static', filename='images/'+book.owner.picture) }}{% endif %}')"></div>
       {% endif %}
     </div>
     <div class="c-user-card__details">
